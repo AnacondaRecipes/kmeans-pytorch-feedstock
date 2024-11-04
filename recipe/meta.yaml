@@ -28,7 +28,7 @@ requirements:
     - numpy
     - tqdm
     - numba
-    - pytorch
+    - pytorch >=1.0.0
 
 test:
   imports:
