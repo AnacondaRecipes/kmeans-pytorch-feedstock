@@ -1,45 +1,55 @@
-{% set name = "<PLEASE ADD PKG NAME>" %}
-{% set version = "<PLEASE ADD PKG VERSION>" %}
+{% set name = "kmeans-pytorch" %}
+{% set version = "0.3" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: <sha256>
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/kmeans_pytorch-{{ version }}.tar.gz
+  sha256: c0e7279078f5592c0a80a836897efd1567c3275544e7d0ad844bff24053d8e78
 
 build:
   number: 0
+    # s390x: numba unavailable
+  skip: true  # [py<38 or s390x]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  entry_points:
+    - kmeans_pytorch=kmeans_pytorch.main:main
 
 requirements:
   host:
     - python
     - pip
+    - setuptools
+    - wheel
   run:
     - python
+    - numpy
+    - tqdm
+    - numba
+    - pytorch >=1.0.0
 
 test:
   imports:
-    - {{ name.replace('-', '.') }}
+    - kmeans_pytorch
   requires:
     - pip
   commands:
     - pip check
+    - kmeans_pytorch --help
 
 about:
-  home: <PLEASE ADD HOME URL>
-  summary: <PLEASE ADD SUMMARY>
+  home: https://subhadarship.github.io/kmeans_pytorch
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: PyTorch implementation of kmeans for utilizing GPU.
   description: |
-    <PLEASE ADD DESCRIPTION>
-  license: <PLEASE ADD LICENSE>
-  license_family: <PLEASE ADD LICENSE_FAMILY>
-  license_file: <PLEASE_ADD_LICENSE_FILE>
-  dev_url: <PLEASE ADD DEV URL>
-  doc_url: <PLEASE ADD DOC URL>
+    PyTorch implementation of kmeans for utilizing GPU.
+  doc_url: https://subhadarship.github.io/kmeans_pytorch
+  dev_url: https://github.com/subhadarship/kmeans_pytorch
 
 extra:
   recipe-maintainers:
-    - Jrice1317
+    - lorepirri
